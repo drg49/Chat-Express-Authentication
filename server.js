@@ -1,29 +1,28 @@
-import dotenv from "dotenv"; // import env variables
-import express, {json} from "express"; // import express
-import morgan from "morgan"; //import morgan
-import cors from "cors"; // import cors
+import dotenv from "dotenv";
+import express, {json} from "express";
+import morgan from "morgan";
+import cors from "cors";
 import UserController from "./controllers/UserController.js";
+import ContactsController from "./controllers/ContactsController.js";
 import "./data/connection.js";
 
-dotenv.config()// load .env variables
+dotenv.config(); // Load .env variables
 
-//DESTRUCTURE ENV VARIABLES WITH DEFAULT VALUES
-const {PORT = 4000} = process.env
+const { PORT = 4000 } = process.env;
 
-// Create Application Object
-const app = express()
+const app = express(); // Create Application Object
 
 // GLOBAL MIDDLEWARE
-app.use(cors()) // add cors headers
-app.use(morgan("tiny")) // log the request for debugging
-app.use(json()) // parse json bodies
+app.use(cors({ origin: true, credentials: true })); // Add cors headers
+app.use(morgan("tiny")); // log the request for debugging
+app.use(json()); // Parse json bodies
 
-// ROUTES AND ROUTES
 app.get("/", (req, res) => {
-    res.send("this is the test route to make sure server is working")
-})
+    res.send("The express chat server is running.")
+});
 
 app.use("/user", UserController);
+app.use("/contacts", ContactsController);
 
 // APP LISTENER
 app.listen(PORT, () => console.log("SERVER STATUS", `Listening on port ${PORT}`))
