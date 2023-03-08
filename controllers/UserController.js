@@ -11,7 +11,7 @@ const router = Router();
 
 const { SECRET } = process.env;
 
-router.post("/register", canRegister, async (req, res) => {
+router.post('/register', canRegister, async (req, res) => {
   try {
     // hash the password
     req.body.password = await bcrypt.hash(req.body.password, 10);
@@ -25,7 +25,7 @@ router.post("/register", canRegister, async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     let user;
 
@@ -47,24 +47,34 @@ router.post("/login", async (req, res) => {
         res.status(200).json({ message: 'Login successful.' });
       }
       else {
-        res.status(400).json({ error: "Password does not match." });
+        res.status(400).json({ error: 'Password does not match.' });
       }
     }
     else {
-      res.status(400).json({ error: "User does not exist." });
+      res.status(400).json({ error: 'User does not exist.' });
     }
   }
   catch (error) {
-    res.status(400).json({ error: "Failed to login user." });
+    res.status(400).json({ error: 'Failed to login user.' });
   }
 });
 
-router.post("/validate", isLoggedIn, (req, res) => {
+router.post('/validate', isLoggedIn, (req, res) => {
   try {
     res.status(200).json({ message: 'User logged in.' });
   }
   catch (error) {
     res.status(400).json({ error: 'Failed to authorize user' });
+  }
+});
+
+router.post('/logout', async (req, res) => {
+  try {
+    res.clearCookie('token');
+    res.status(200).json({ message: 'User logged out.' });
+  }
+  catch (error) {
+    res.status(400).json({ error: 'Failed to remove login cookie.' });
   }
 });
 
